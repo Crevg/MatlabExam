@@ -7,8 +7,8 @@
 
 ## PROBLEMA 1
 
-## NOMBRE:
-## CARNE:
+## NOMBRE: CRISTOFER VILLEGAS GONZÁLEZ
+## CARNE: 201262992
 
 2;
 
@@ -21,6 +21,10 @@ X=load("-ascii","regresion.dat");
 ####################################################
 figure(1);
 hold off;
+plot(X(1,:),X(2,:), '.r')
+title("Puntos bidimensionales")
+xlabel("x")
+ylabel("y")
 
 ####################################################
 ## Problema 1.2                                   ##
@@ -30,11 +34,11 @@ function val=f(abc,X)
   ## abc: vector columna [a,b,c]' con los parámetros de la función cuadrática
   ## X:   datos para evaluar la función, un dato por columna
 
-  val=0; # Borre esta línea
-
   ## Ponga su código aquí:
-
-  
+  val=0
+  for j = 1:columns(X)
+    val = val + (X(2,j) - (abc(1,1)*X(1,j)*X(1,j)+abc(2,1)*X(1,j)+abc(3,1)))*(X(2,j) - (abc(1,1)*X(1,j)*X(1,j)+abc(2,1)*X(1,j)+abc(3,1)));
+  endfor  
 endfunction
 
 
@@ -46,14 +50,23 @@ function val=gf(abc,X)
   ## abc: vector columna [a,b,c]' con los parámetros de la función cuadrática
   ## X:   datos para evaluar la función, un dato por columna
   
-  val=[0,0,0]'; # Borre esta línea
-
   ## Use diferenciación NUMERICA para calcular el gradiente de f:
+  #utilizando un h de 0.0001
+  h = 0.0001
+  val = zeros(3, columns(X))
+  for i (1:columns(X))
+
+    dfa =  (f(abc, X(1,i)) - f([abc(1)-h, abc(2), abc(3)], X(1,i)))/(abc(1)-(abc(1)-h))
+    dfb =  (f(abc, X(1,i)) - f([abc(1), abc(2)-h, abc(3)], X(1,i)))/(abc(2)-(abc(2)-h))
+    dfc =  (f(abc, X(1,i)) - f([abc(1), abc(2), abc(3)-h], X(1,i)))/(abc(3)-(abc(3)-h))
+    val(1,i) = dfa
+    val(2,i) = dfb
+    val(3,i) = dfc
+    
+  endfor
 
 
-  
 endfunction
-
 ####################################################
 ## Problema 1.4                                   ##
 ## Descenso de gradiente                          ##
