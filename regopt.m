@@ -35,9 +35,10 @@ function val=f(abc,X)
   ## X:   datos para evaluar la función, un dato por columna
 
   ## Ponga su código aquí:
-  val=0
+  val=0;
   for j = 1:columns(X)
-    val = val + (X(2,j) - (abc(1,1)*X(1,j)*X(1,j)+abc(2,1)*X(1,j)+abc(3,1)))*(X(2,j) - (abc(1,1)*X(1,j)*X(1,j)+abc(2,1)*X(1,j)+abc(3,1)));
+    suma = (X(2,j) - (abc(1,1)*X(1,j)*X(1,j)+abc(2,1)*X(1,j)+abc(3, 1)));
+    val = val + suma*suma;
   endfor  
 endfunction
 
@@ -51,22 +52,18 @@ function val=gf(abc,X)
   ## X:   datos para evaluar la función, un dato por columna
   
   ## Use diferenciación NUMERICA para calcular el gradiente de f:
-  #utilizando un h de 0.0001
-  h = 0.0001
-  val = zeros(3, columns(X))
-  for i (1:columns(X))
-
-    dfa =  (f(abc, X(1,i)) - f([abc(1)-h, abc(2), abc(3)], X(1,i)))/(abc(1)-(abc(1)-h))
-    dfb =  (f(abc, X(1,i)) - f([abc(1), abc(2)-h, abc(3)], X(1,i)))/(abc(2)-(abc(2)-h))
-    dfc =  (f(abc, X(1,i)) - f([abc(1), abc(2), abc(3)-h], X(1,i)))/(abc(3)-(abc(3)-h))
-    val(1,i) = dfa
-    val(2,i) = dfb
-    val(3,i) = dfc
-    
-  endfor
-
+  #utilizando un h de 0.00001
+  h = 1e-5;
+  val = zeros(3, 1);
+  dfa =  f(abc, X) - f([abc(1,1)-h; abc(2,1); abc(3,1)], X);
+  dfb =  f(abc, X) - f([abc(1,1); abc(2,1)-h; abc(3,1)], X);
+  dfc =  f(abc, X) - f([abc(1,1); abc(2,1); abc(3,1)-h], X);
+  val(1,1) = dfa/h;
+  val(2,1) = dfb/h;
+  val(3,1) = dfc/h;
 
 endfunction
+
 ####################################################
 ## Problema 1.4                                   ##
 ## Descenso de gradiente                          ##
@@ -90,18 +87,31 @@ function [ABC,err]=optimice(f,gf,X,lambda,tol,abc0=[0,0,0]')
   endif;
   
   ## Elimine la siguiente inicialización
-  ABC=0; err=0;
+  ABC=abc0; err=[100];
 
   ## Ponga su código aquí:
-
-
+  i = 1;
+  while(err(i) > tol)
   
+    abcg = [ABC(1,i);ABC(2,i);ABC(3,i)];
+    grad = gf( abcg,X);
+    a = ABC(1,i) - lambda*grad(1,1);
+    b = ABC(2,i) - lambda*grad(2,1); 
+    c = ABC(3,i) - lambda*grad(3,1);
+    abci = [a,b,c]';
+    ABC = [ABC, abci];
+    i = i+1;
+    err = [err,f(abcg,X)];
+    if (abs(err(i)-err(i-1)) < tol)
+      break
+    endif
+  endwhile
 endfunction
 
 ## Llame al optimizador con la interfaz anterior
 
-lambda=1;  # Ajuste esto
-tol=1e-10; # Ajuste esto
+lambda=0.0001;  # Ajuste esto
+tol=1e-5; # Ajuste esto
 [ABC,err]=optimice(@f,@gf,X,lambda,tol,[0,1,0]');
 
 ####################################################
@@ -109,11 +119,18 @@ tol=1e-10; # Ajuste esto
 ## Imprima el conjunto óptimo de parámetros       ##
 ####################################################
 
-
+disp(ABC(1,rows(ABC)))
+disp(ABC(2,rows(ABC)))
+disp(ABC(3,rows(ABC)))
 ####################################################
 ## Problema 1.6                                   ##
 ## Muestre el error en función de las iteraciones ##
 ####################################################
+
+figure(2)
+hold on
+plot(err)
+title("Error en función de las iteraciones")
 
 
 ####################################################
