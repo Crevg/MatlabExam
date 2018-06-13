@@ -21,7 +21,7 @@ X=load("-ascii","regresion.dat");
 ####################################################
 figure(1);
 hold off;
-plot(X(1,:),X(2,:), '.r')
+plot(X(1,:),X(2,:), 'x')
 title("Puntos bidimensionales")
 xlabel("x")
 ylabel("y")
@@ -35,11 +35,8 @@ function val=f(abc,X)
   ## X:   datos para evaluar la función, un dato por columna
 
   ## Ponga su código aquí:
-  val=0;
-  for j = 1:columns(X)
-    suma = (X(2,j) - (abc(1,1)*X(1,j)*X(1,j)+abc(2,1)*X(1,j)+abc(3, 1)));
-    val = val + suma*suma;
-  endfor  
+  suma = (X(2,:) .- (abc(1,1).*X(1,:).^2+abc(2,1).*X(1,:).+abc(3, 1)));
+  val = sum( suma .* suma);
 endfunction
 
 
@@ -54,13 +51,10 @@ function val=gf(abc,X)
   ## Use diferenciación NUMERICA para calcular el gradiente de f:
   #utilizando un h de 0.00001
   h = 1e-5;
-  val = zeros(3, 1);
   dfa =  f(abc, X) - f([abc(1,1)-h; abc(2,1); abc(3,1)], X);
   dfb =  f(abc, X) - f([abc(1,1); abc(2,1)-h; abc(3,1)], X);
   dfc =  f(abc, X) - f([abc(1,1); abc(2,1); abc(3,1)-h], X);
-  val(1,1) = dfa/h;
-  val(2,1) = dfb/h;
-  val(3,1) = dfc/h;
+  val= [dfa./h,; dfb./h; dfc./h];
 
 endfunction
 
@@ -94,7 +88,7 @@ function [ABC,err]=optimice(f,gf,X,lambda,tol,abc0=[0,0,0]')
   while(err(i) > tol)
   
     abcg = [ABC(1,i);ABC(2,i);ABC(3,i)];
-    grad = gf( abcg,X);
+    grad = gf(abcg,X);
     a = ABC(1,i) - lambda*grad(1,1);
     b = ABC(2,i) - lambda*grad(2,1); 
     c = ABC(3,i) - lambda*grad(3,1);
@@ -131,12 +125,27 @@ figure(2)
 hold on
 plot(err)
 title("Error en función de las iteraciones")
-
+xlabel("Número de Iteraciones")
+ylabel("Error")
 
 ####################################################
 ## Problema 1.7                                   ##
 ## Muestre las curvas inicial, intermedias y      ##
 ## final ajustadas a los datos                    ##
 ####################################################
-hold on;
 
+
+figure(1)
+hold on;
+x = linspace(-2,2);
+abc0 = [0,1,0]';
+y0 = abc0(1,1).*X(1,:).*X(1,:)+ abc0(2,1).*X(1,:) + abc0(3,1);
+plot(X(1,:), y0, 'k');
+y = y0;
+for i = (2:columns(ABC)-1)
+hold on;
+y0 = ABC(1,i).*x.*x+ ABC(2,i).*x + ABC(3,i);
+plot(x, y0, 'c')
+endfor
+yf = ABC(1,columns(ABC)).*x.*x+ ABC(2,columns(ABC)).*x + ABC(3,columns(ABC));
+plot(x, yf,'r')
