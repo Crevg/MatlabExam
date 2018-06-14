@@ -7,8 +7,8 @@
 
 ## PROBLEMA 3
 
-## NOMBRE:
-## CARNE:
+## NOMBRE: Cristofer Villegas   
+## CARNE: 201262992
 
 3;
 
@@ -20,13 +20,19 @@ N=columns(X);
 ## Problema 3.1                               ##
 ## Grafique los datos                         ##
 ################################################
+figure(1)
+plot3(X(1,:), X(2,:), X(3,:), 'x')
 
-  
 ################################################
 ## Problema 3.2                               ##
 ## Calcule la media de los datos              ##
 ################################################
 
+#Se calcula como u = (1/n )* sumatorio de i = 1 a n de xi 
+u1 = (1/N)* sum(X(1,:));
+u2 = (1/N)* sum(X(2,:));
+u3 = (1/N)* sum(X(3,:));
+U = [u1, u2, u3];
 
 ################################################
 ## Problema 3.3                               ##
@@ -34,8 +40,8 @@ N=columns(X);
 ################################################
 
 figure(1);
-hold off;
-
+hold on;
+plot3(u1, u2, u3, 'or')
 
 ################################################
 ## Problema 3.4                               ##
