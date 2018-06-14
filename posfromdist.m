@@ -9,8 +9,8 @@
 
 ## PROBLEMA 2
 
-## NOMBRE:
-## CARNE:
+## NOMBRE: Cristofer Villegas
+## CARNE: 201262992
 
 
 ## Cargue los datos de distancias
@@ -40,14 +40,19 @@ function p=calcPosition(dists,emisorPos,option=1)
   ## ## Problema 2.1 ##
   ## ##################
   ## Construya la matriz M
-  M  = zeros(dim,4); ## CAMBIE ESTO!!
+  M = [1, -2.*emisorPos(1,1), -2.*emisorPos(2,1), -2*emisorPos(3,1)]
+  for i = 2:dim
+    M = [M;1, -2.*emisorPos(1,i), -2.*emisorPos(2,i), -2*emisorPos(3,i)]
+  endfor
 
   ## ##################
   ## ## Problema 2.2 ##
   ## ##################
   ## Construya el vector b
-
-  b = zeros(dim,1); ## CAMBIE ESTO!!
+  b = [dists(1)*dists(1)- (emisorPos(1, 1)*emisorPos(1,1)+emisorPos(2, 1)*emisorPos(2,1)+emisorPos(3, 1)*emisorPos(3,1))]
+  for i = 2:dim
+    b = [b; dists(i)*dists(i)- (emisorPos(1, i)*emisorPos(1,i)+emisorPos(2, i)*emisorPos(2,i)+emisorPos(3, i)*emisorPos(3,i))]
+  endfor
 
   ## ##################
   ## ## Problema 2.3 ##
