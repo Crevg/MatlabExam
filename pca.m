@@ -65,7 +65,7 @@ plot3(Xm(1,:), Xm(2,:), Xm(3,:), 'x')
 
 #se calcula como como Ex = (1/n) * X * transp(X)
 
-Ex = cov(Xm);
+Ex = cov(Xm(:,:)');
 
 ################################################
 ## Problema 3.6                               ##
@@ -80,13 +80,16 @@ Ex = cov(Xm);
 ## Reordene los eigenvectores para PCA        ##
 ################################################
 
-
+[~, permut] = sort(abs(eigVal), "descend");
+eigVal = eigVal(permut);
+eigVec = eigVec(:,permut);
 
 ########################################################################
 ## Problema 3.8                                                       ##
 ## Cuáles son los ejes principales y qué varianza tiene los datos     ##
 ########################################################################
 
+#Los dos ejes principales son el 3 y el 2.
 
 ########################################################################
 ## Problema 3.9                                                       ##
@@ -94,13 +97,24 @@ Ex = cov(Xm);
 ## eigenvectores                                                      ##
 ########################################################################
 
+P = eigVec(:, [1,2]);
+
+
+Y = P' * Xm;
+
 ## Grafique la proyección
 figure(3);
 hold off;
+plot(Y(1,:), Y(2,:) , 'x')
 
 ########################################################################
 ## Problema 3.10                                                      ##
 ## Calcule los datos reconstrudos a partir de los datos proyectados   ##
 ########################################################################
+Xmr = P*Y;
+Xr = [Xmr(1,:) + u1; Xmr(2,:) + u2; Xmr(3,:) + u3 ];
 figure(4);
 hold off;
+plot3(Xr(1,:), Xr(2,:), Xr(3,:), 'sm')
+hold on;
+plot3(X(1,:), X(2,:), X(3,:), 'x')
