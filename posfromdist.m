@@ -97,16 +97,17 @@ function p=calcPosition(dists,emisorPos,option=1)
     ## Con 3 emisores, calcule las dos posibles posiciones
 
     espNull = Vr(:,columns(Sr));
-    a = espNull(2,1)*espNull(2,1) + espNull(3,1)*espNull(3,1) + espNull(4,1)*espNull(4,1)
-    b = 2*espNull(2,1)*hatp(2,1) + 2*espNull(3,1)*hatp(3,1) + 2*espNull(4,1)*hatp(4,1) - espNull(1,1)
-    c = hatp(2,1)+hatp(3,1) + hatp(4,1) - hatp(1,1)
+    a = espNull(2,1)*espNull(2,1) + espNull(3,1)*espNull(3,1) + espNull(4,1)*espNull(4,1);
+    b = 2*espNull(2,1)*hatp(2,1) + 2*espNull(3,1)*hatp(3,1) + 2*espNull(4,1)*hatp(4,1) - espNull(1,1);
+    c = hatp(2,1)+hatp(3,1) + hatp(4,1) - hatp(1,1);
     if (option == 1)
-      lambda = (-b + sqrt(b*b - 4*a*c))/(2*a)
+      lambda = (-b + sqrt(b*b - 4*a*c))/(2*a);
     else
-      lambda = (-b - sqrt(b*b - 4*a*c))/(2*a)
+      lambda = (-b - sqrt(b*b - 4*a*c))/(2*a);
     endif
 
     p = hatp + lambda*espNull;
+    p = p([2,3,4]);
 
 
   else 
@@ -116,7 +117,7 @@ function p=calcPosition(dists,emisorPos,option=1)
 
     ## Caso general
 
-    ## PONGA SU CÓDIGO AQUÍ
+    p = hatp([2,3,4]);
   endif
   
 endfunction
@@ -155,7 +156,29 @@ function d=calcDistances(pos,emisorPos)
 
   ## Calcule la distancia a cada emisor, dada la posición "pos" del
   ## objeto y las posiciones de los emisores.
+  dim = columns(emisorPos);
+  M = [1, -2.*emisorPos(1,1), -2.*emisorPos(2,1), -2*emisorPos(3,1)];
+  for i = 2:dim
+    M = [M;1, -2.*emisorPos(1,i), -2.*emisorPos(2,i), -2*emisorPos(3,i)];
+  endfor
+
+  posCol1 = pos(:,1).^2+ pos(:,2).^2+pos(:,3).^2; 
+  pos = [posCol1, pos]';
+
+  b = M*pos;
+
+  SqrNormEm = emisorPos(1,:).^2 + emisorPos(2,:).^2 + emisorPos(3,:).^2;
+  d = b;
+  for i = 1:rows(b);
+    d(i,:) = sqrt(b(i,:) + SqrNormEm(1,i));
+  endfor
+
+  d = d';
   
+
+
+  
+
   ## PONGA SU CÓDIGO AQUÍ
 endfunction
 
