@@ -40,18 +40,18 @@ function p=calcPosition(dists,emisorPos,option=1)
   ## ## Problema 2.1 ##
   ## ##################
   ## Construya la matriz M
-  M = [1, -2.*emisorPos(1,1), -2.*emisorPos(2,1), -2*emisorPos(3,1)]
+  M = [1, -2.*emisorPos(1,1), -2.*emisorPos(2,1), -2*emisorPos(3,1)];
   for i = 2:dim
-    M = [M;1, -2.*emisorPos(1,i), -2.*emisorPos(2,i), -2*emisorPos(3,i)]
+    M = [M;1, -2.*emisorPos(1,i), -2.*emisorPos(2,i), -2*emisorPos(3,i)];
   endfor
 
   ## ##################
   ## ## Problema 2.2 ##
   ## ##################
   ## Construya el vector b
-  b = [dists(1)*dists(1)- (emisorPos(1, 1)*emisorPos(1,1)+emisorPos(2, 1)*emisorPos(2,1)+emisorPos(3, 1)*emisorPos(3,1))]
+  b = [dists(1)*dists(1)- (emisorPos(1, 1)*emisorPos(1,1)+emisorPos(2, 1)*emisorPos(2,1)+emisorPos(3, 1)*emisorPos(3,1))];
   for i = 2:dim
-    b = [b; dists(i)*dists(i)- (emisorPos(1, i)*emisorPos(1,i)+emisorPos(2, i)*emisorPos(2,i)+emisorPos(3, i)*emisorPos(3,i))]
+    b = [b; dists(i)*dists(i)- (emisorPos(1, i)*emisorPos(1,i)+emisorPos(2, i)*emisorPos(2,i)+emisorPos(3, i)*emisorPos(3,i))];
   endfor
 
   ## ##################
@@ -59,7 +59,19 @@ function p=calcPosition(dists,emisorPos,option=1)
   ## ##################
 
   ## Calcule la matriz seudo-inversa utilizando SVD
-  iM=pinv(M); ## CAMBIE ESTO!! (se busca calcular esto con SVD
+  [U, S, V] = svd(M);
+  Ur = resize(U, rows(M), columns(M));
+  Sr = resize(S, columns(M), rows(M));
+  Ds = 1./Sr';
+  for i = (1:rows(Sr'))
+    for j = (1:columns(Sr'))
+        if (abs(Sr'(i,j)) < 1e-7)
+            Ds(i,j) = 0;
+        endif
+    endfor
+  endfor
+  Vr = resize(V, columns(M), rows(M));
+  iM = Vr * Ds * Ur';
 
   ## Verifique que iM y pinv(M) son lo mismo
   if (norm(iM-pinv(M),"fro") > 1e-6)
@@ -67,11 +79,12 @@ function p=calcPosition(dists,emisorPos,option=1)
   endif
 
   ## ##################
-  ## ## Problema 2.4 ##
+  ## ## Problema 2.4   disp("call")
+##
   ## ##################
   
   ## Calcule la solución particular
-  hatp=zeros(4,1); ## CAMBIE ESTO!!
+  hatp=iM*b;
     
   
   ## El caso de 3 dimensiones tiene dos posibles soluciones:
@@ -83,8 +96,19 @@ function p=calcPosition(dists,emisorPos,option=1)
 
     ## Con 3 emisores, calcule las dos posibles posiciones
 
-    ## PONGA SU CÓDIGO AQUÍ
-    
+    espNull = Vr(:,columns(Sr));
+    a = espNull(2,1)*espNull(2,1) + espNull(3,1)*espNull(3,1) + espNull(4,1)*espNull(4,1)
+    b = 2*espNull(2,1)*hatp(2,1) + 2*espNull(3,1)*hatp(3,1) + 2*espNull(4,1)*hatp(4,1) - espNull(1,1)
+    c = hatp(2,1)+hatp(3,1) + hatp(4,1) - hatp(1,1)
+    if (option == 1)
+      lambda = (-b + sqrt(b*b - 4*a*c))/(2*a)
+    else
+      lambda = (-b - sqrt(b*b - 4*a*c))/(2*a)
+    endif
+
+    p = hatp + lambda*espNull;
+
+
   else 
     ## ##################
     ## ## Problema 2.6 ##
