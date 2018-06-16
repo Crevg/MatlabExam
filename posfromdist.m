@@ -49,9 +49,9 @@ function p=calcPosition(dists,emisorPos,option=1)
   ## ## Problema 2.2 ##
   ## ##################
   ## Construya el vector b
-  b = [dists(1)*dists(1)- (emisorPos(1, 1)*emisorPos(1,1)+emisorPos(2, 1)*emisorPos(2,1)+emisorPos(3, 1)*emisorPos(3,1))];
+  b = [dists(1)*dists(1)- norm(emisorPos(:, 1))^2];
   for i = 2:dim
-    b = [b; dists(i)*dists(i)- (emisorPos(1, i)*emisorPos(1,i)+emisorPos(2, i)*emisorPos(2,i)+emisorPos(3, i)*emisorPos(3,i))];
+    b = [b; dists(i)^2 - norm(emisorPos(:, i))^2];
   endfor
 
   ## ##################
@@ -92,14 +92,12 @@ function p=calcPosition(dists,emisorPos,option=1)
 
     ## ##################
     ## ## Problema 2.5 ##
-    ## ##################
-
+    ## ################## 
     ## Con 3 emisores, calcule las dos posibles posiciones
-
-    espNull = Vr(:,columns(Sr));
-    a = espNull(2,1)*espNull(2,1) + espNull(3,1)*espNull(3,1) + espNull(4,1)*espNull(4,1);
-    b = 2*espNull(2,1)*hatp(2,1) + 2*espNull(3,1)*hatp(3,1) + 2*espNull(4,1)*hatp(4,1) - espNull(1,1);
-    c = hatp(2,1)+hatp(3,1) + hatp(4,1) - hatp(1,1);
+    espNull = V(:,columns(Ds));
+    a = espNull(2)^2 + espNull(3)^2+ espNull(4)^2;
+    b = 2*espNull(2)*hatp(2) + 2*espNull(3)*hatp(3) + 2*espNull(4)*hatp(4) - espNull(1);
+    c = hatp(2)^2+hatp(3)^2 + hatp(4)^2 - hatp(1);
     if (option == 1)
       lambda = (-b + sqrt(b*b - 4*a*c))/(2*a);
     else
@@ -175,11 +173,6 @@ function d=calcDistances(pos,emisorPos)
 
   d = d';
   
-
-
-  
-
-  ## PONGA SU CÓDIGO AQUÍ
 endfunction
 
 
@@ -202,7 +195,7 @@ p=calcPosition(D(1,1:5),E)
 ## ########################
 ## ## Número de emisores ##
 ## ########################
-n=5; ## Cambie aquí el número de emisores a usar
+n=3; ## Cambie aquí el número de emisores a usar
 
 ## Calcule las posiciones a partir de las distancias
 p=calcPositions(D(:,1:n),E);
