@@ -1,24 +1,12 @@
-Instituto Tecnológico de Costa Rica
-Área Académica de Ingeniería en Computadores
-CE-3102 Análisis Numérico para Ingeniería
-Prof. Pablo Alvarado Moya
-I Semestre 2018
-Examen Final
+Examen ANPI
+Nombre: Cristofer Villegas
+Carnet: 201262992
 
-Estos son los archivos que acompañan al enunciado del examen final de
-Análisis Numérico para Ingeniería, para el primer semestre 2018.
+Se adjunta el PDF con las respuestas teóricas y las consideraciones
+tomadas en cada uno de los problemas durante su resolución.
+
+Además se adjunta los archivos de código subido por el profesor
+modificados con la solución de cada problema y los archivos
+con los datos subidos por el profesor.
 
 
-Problema 1:
-  regopt.m
-  regresion.dat
-
-Problema 2:
-  posfromdist.m
-  emisors.dat
-  dists.dat
-  AlgebraicMultilaterationNorrdine.pdf
-
-Problema 3:
-  pca.m
-  pcadata.dat

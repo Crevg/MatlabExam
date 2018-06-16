@@ -49,7 +49,7 @@ function val=gf(abc,X)
   ## X:   datos para evaluar la función, un dato por columna
   
   ## Use diferenciación NUMERICA para calcular el gradiente de f:
-  #utilizando un h de 0.00001
+  #utilizando un h de 1x10 a la -5
   h = 1e-5;
   dfa =  f(abc, X) - f([abc(1,1)-h; abc(2,1); abc(3,1)], X);
   dfb =  f(abc, X) - f([abc(1,1); abc(2,1)-h; abc(3,1)], X);
@@ -80,8 +80,7 @@ function [ABC,err]=optimice(f,gf,X,lambda,tol,abc0=[0,0,0]')
     error("Vector inicial no tiene forma 3x1");
   endif;
   
-  ## Elimine la siguiente inicialización
-  ABC=abc0; err=[100];
+  ABC=abc0; err=[1000];
 
   ## Ponga su código aquí:
   i = 1;
@@ -104,8 +103,8 @@ endfunction
 
 ## Llame al optimizador con la interfaz anterior
 
-lambda=0.0001;  # Ajuste esto
-tol=1e-5; # Ajuste esto
+lambda=0.001;  # Ajuste esto
+tol=1e-8; # Ajuste esto
 [ABC,err]=optimice(@f,@gf,X,lambda,tol,[0,1,0]');
 
 ####################################################

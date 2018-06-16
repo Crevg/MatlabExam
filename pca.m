@@ -28,10 +28,7 @@ plot3(X(1,:), X(2,:), X(3,:), 'x')
 ## Calcule la media de los datos              ##
 ################################################
 
-#Se calcula como u = (1/n )* sumatorio de i = 1 a n de xi 
-#u1 = (1/N)* sum(X(1,:));
-#u2 = (1/N)* sum(X(2,:));
-#u3 = (1/N)* sum(X(3,:));
+#Cómo se calcula en el pdf
 
 u1 = mean(X(1,:))
 u2 = mean(X(2,:))
@@ -62,8 +59,7 @@ plot3(Xm(1,:), Xm(2,:), Xm(3,:), 'x')
 ## Calcule la matriz de covarianza            ##
 ################################################
 
-
-#se calcula como como Ex = (1/n) * X * transp(X)
+#Cómo se calcula en el pdf
 
 Ex = cov(Xm(:,:)');
 
@@ -80,7 +76,10 @@ Ex = cov(Xm(:,:)');
 ## Reordene los eigenvectores para PCA        ##
 ################################################
 
-[~, permut] = sort(abs(eigVal), "descend");
+[~, permut] = sort(abs(eigVal), "descend"); 
+#permut tiene los indices en los que se deben ordenar las columnas 
+#de los eigenvectores y los eigenvalores para que queden en orden
+#decendente
 eigVal = eigVal(permut);
 eigVec = eigVec(:,permut);
 
@@ -89,7 +88,7 @@ eigVec = eigVec(:,permut);
 ## Cuáles son los ejes principales y qué varianza tiene los datos     ##
 ########################################################################
 
-#Los dos ejes principales son el 3 y el 2.
+#Los dos ejes principales son el Z y el Y (Expandido en el PDF)
 
 ########################################################################
 ## Problema 3.9                                                       ##
@@ -98,7 +97,6 @@ eigVec = eigVec(:,permut);
 ########################################################################
 
 P = eigVec(:, [1,2]);
-
 
 Y = P' * Xm;
 

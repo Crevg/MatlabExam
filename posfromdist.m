@@ -79,8 +79,7 @@ function p=calcPosition(dists,emisorPos,option=1)
   endif
 
   ## ##################
-  ## ## Problema 2.4   disp("call")
-##
+  ## ## Problema 2.4 ##
   ## ##################
   
   ## Calcule la solución particular
@@ -94,7 +93,9 @@ function p=calcPosition(dists,emisorPos,option=1)
     ## ## Problema 2.5 ##
     ## ################## 
     ## Con 3 emisores, calcule las dos posibles posiciones
-    espNull = V(:,columns(Ds));
+    #El vector engendrador del espacio nulo se da en la columna de V que coincide con
+    #la columa que contiene sólo 0s en Ds
+    espNull = V(:,columns(Ds)); 
     a = espNull(2)^2 + espNull(3)^2+ espNull(4)^2;
     b = 2*espNull(2)*hatp(2) + 2*espNull(3)*hatp(3) + 2*espNull(4)*hatp(4) - espNull(1);
     c = hatp(2)^2+hatp(3)^2 + hatp(4)^2 - hatp(1);
@@ -195,7 +196,7 @@ p=calcPosition(D(1,1:5),E)
 ## ########################
 ## ## Número de emisores ##
 ## ########################
-n=3; ## Cambie aquí el número de emisores a usar
+n=5; ## Cambie aquí el número de emisores a usar
 
 ## Calcule las posiciones a partir de las distancias
 p=calcPositions(D(:,1:n),E);
